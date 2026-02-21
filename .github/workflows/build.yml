@@ -5,17 +5,19 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'  # This is the magic line for "butt loads of files"
+          fetch-depth: 0
 
       - name: Build Kext
         run: |
-          # 1. Move into the folder where the project lives
-          cd RTL8821CE
-          
-          # 2. Build the project using the local file
-          xcodebuild -project RTL8821CEwifi.xcodeproj -configuration Release -sdk macosx
+          # We search for the file one more time now that submodules are forced
+          PROJECT=$(find . -name "*.xcodeproj" | head -n 1)
+          echo "Building: $PROJECT"
+          xcodebuild -project "$PROJECT" -configuration Release -sdk macosx
           
       - name: Upload Kext
         uses: actions/upload-artifact@v4
         with:
           name: RTL8821CEwifi-Kext
-          path: RTL8821CE/build/Release/*.kext
+          path: "**/build/Release/*.kext"
