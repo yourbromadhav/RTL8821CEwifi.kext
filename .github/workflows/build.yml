@@ -4,20 +4,20 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: 'recursive'  # This is the magic line for "butt loads of files"
-          fetch-depth: 0
-
+      - name: Wipe and Fresh Clone
+        run: |
+          # This ignores your current repo and gets the real code
+          git clone --recursive https://github.com/crangel660/RTL8821CEwifi.kext.git fresh_source
+          
       - name: Build Kext
         run: |
-          # We search for the file one more time now that submodules are forced
-          PROJECT=$(find . -name "*.xcodeproj" | head -n 1)
-          echo "Building: $PROJECT"
-          xcodebuild -project "$PROJECT" -configuration Release -sdk macosx
+          cd fresh_source
+          # We check the internal folder where the .xcodeproj actually lives
+          cd RTL8821CE
+          xcodebuild -project RTL8821CEwifi.xcodeproj -target RTL8821CEwifi -configuration Release -sdk macosx
           
       - name: Upload Kext
         uses: actions/upload-artifact@v4
         with:
           name: RTL8821CEwifi-Kext
-          path: "**/build/Release/*.kext"
+          path: fresh_source/RTL8821CE/build/Release/*.kext
