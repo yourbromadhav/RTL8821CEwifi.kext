@@ -11,10 +11,15 @@ jobs:
       - name: Build Kext
         run: |
           cd source
-          xcodebuild -project RTL8821CE/RTL8821CEwifi.xcodeproj -target RTL8821CEwifi -configuration Release -sdk macosx
+          # Find any .xcodeproj file and save its location
+          PROJECT_FILE=$(find . -name "*.xcodeproj" -print -quit)
+          echo "Found project at: $PROJECT_FILE"
+          
+          # Build using the found project file
+          xcodebuild -project "$PROJECT_FILE" -configuration Release -sdk macosx
           
       - name: Upload Kext
         uses: actions/upload-artifact@v4
         with:
           name: RTL8821CEwifi-Kext
-          path: source/build/Release/RTL8821CEwifi.kext
+          path: source/**/build/Release/*.kext
