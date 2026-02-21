@@ -5,10 +5,10 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Compile Driver
-        run: make
+      - name: Build Kext
+        run: xcodebuild -project RTL8821CEwifi/RTL8821CEwifi.xcodeproj -target RTL8821CEwifi -configuration Release -sdk macosx
       - name: Upload Kext
         uses: actions/upload-artifact@v4
         with:
           name: RTL8821CEwifi-Kext
-          path: ./*.kext
+          path: build/Release/RTL8821CEwifi.kext
