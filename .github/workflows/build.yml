@@ -4,23 +4,17 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: List All Files
-        run: find . -maxdepth 3 -not -path '*/.*'
-
+      - name: Force Clone Source
+        run: |
+          git clone --recursive https://github.com/crangel660/RTL8821CEwifi.kext.git source
+          
       - name: Build Kext
         run: |
-          PROJECT=$(find . -name "*.xcodeproj" | head -n 1)
-          if [ -z "$PROJECT" ]; then
-            echo "❌ ERROR: No .xcodeproj file found in the repository!"
-            exit 1
-          fi
-          echo "✅ Found project: $PROJECT"
-          xcodebuild -project "$PROJECT" -configuration Release -sdk macosx
+          cd source
+          xcodebuild -project RTL8821CE/RTL8821CEwifi.xcodeproj -target RTL8821CEwifi -configuration Release -sdk macosx
           
       - name: Upload Kext
         uses: actions/upload-artifact@v4
         with:
           name: RTL8821CEwifi-Kext
-          path: "**/build/Release/*.kext"
+          path: source/build/Release/RTL8821CEwifi.kext
