@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Kext
-        run: xcodebuild -project RTL8821CEwifi/RTL8821CEwifi.xcodeproj -target RTL8821CEwifi -configuration Release -sdk macosx
+        run: xcodebuild -project RTL8821CE-WiFi-kext-source/RTL8821CEwifi.xcodeproj -target RTL8821CEwifi -configuration Release -sdk macosx
       - name: Upload Kext
         uses: actions/upload-artifact@v4
         with:
